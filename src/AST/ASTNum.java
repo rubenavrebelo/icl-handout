@@ -1,13 +1,15 @@
+package AST;
+
 public class ASTNum implements ASTNode {
 
-int val;
+	int val;
 
-        public int eval() { return val; }
+    public int eval() { return val; }
 
-        public ASTNum(int n)
-        {
+    public ASTNum(int n)
+    {
 	   val = n;
-        }
+    }
 
 }
 
