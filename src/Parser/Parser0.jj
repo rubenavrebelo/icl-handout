@@ -33,9 +33,11 @@ SKIP :
 
 TOKEN :
 {
-  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
-  |
   < Num: (["0"-"9"]) + >
+  |
+  < DIV : "/" >
+  |
+  < MULT: "*" >
   |
   < PLUS : "+" >
   |
@@ -49,7 +51,13 @@ TOKEN :
   |
   < RPAR : ")" >
   |
+  < DEF: "def">
+  |
+  < END: "end">
+  |
   < EL: "\n" >
+  |
+  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 }
 
 ASTNode Start():
@@ -73,22 +81,32 @@ ASTNode Exp() :
 }
 
 ASTNode Term() :
-{Token op;
-  ASTNode t1, t2;}
 {
-     t1 = Fact() ( ( op=<TIMES> | op=<DIV> ) t2 = Term() 
+  Token op;
+  ASTNode t1, t2;
+}
+{
+     t1 = Fact() (
+    ( op=<TIMES> | op=<DIV> ) 
+    t2 = Term() 
  		 {
-                 } 
-		)?
+ 		 if(op.kind === TIMES)
+ 		 	t1 = new ASTMult(t1, t2);
+ 		 else
+ 		 	t1 = new ASTDiv(t1, t2);
+         } 
+		)*
      { return t1; } 
 }
 
 
 ASTNode Fact() :
 { Token n; 
-  ASTNode t;}
+  ASTNode t;
+}
 {
-   ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR> )
+   ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR>
+   | n = <Id> { t = new ASTId(n.image)}
    { return t; }
 }
 
