@@ -1,8 +1,10 @@
 package AST;
 
+import AST.Environment.Environment;
+
 public interface ASTNode {
 
-    int eval();
+    int eval(Environment env);
 	
 }
 

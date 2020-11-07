@@ -21,8 +21,8 @@ public class Environment<V> {
 		return this.parent;
 	}
 	
-	public V find(String Id) {
-		
+	public V find(String id) {
+		return map.get(id);
 	}
 	
 	public void assoc (String id, V value) {

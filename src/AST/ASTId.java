@@ -1,5 +1,7 @@
 package AST;
 
+import AST.Environment.Environment;
+
 public class ASTId implements ASTNode {
 	
 	String id;
@@ -9,7 +11,7 @@ public class ASTId implements ASTNode {
 		this.id = id;
     }
 	 
-	public int eval()
+	public int eval(Environment env)
     { 
     	return -1; 
 	}
