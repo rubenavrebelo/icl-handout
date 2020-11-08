@@ -12,8 +12,10 @@ public class ASTId implements ASTNode {
     }
 	 
 	public int eval(Environment env)
-    { 
-    	return -1; 
+    {
+		Object obj = null;
+		obj = env.find(id);
+		return (Integer) obj; 
 	}
 
 }
