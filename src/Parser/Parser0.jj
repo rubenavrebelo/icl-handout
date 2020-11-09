@@ -109,10 +109,10 @@ ASTNode Fact() :
   ASTNode t;
 }
 {
-   ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR>
+   ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); }
+   | <LPAR> t=Exp() <RPAR>
    | n = <Id> { t = new ASTId(n.image)}
    | < DEF > n=< Id > < EQ > t=Exp() < IN > t1=Exp() < END > { t = new ASTDef(n.image, t, t1); }
-   | < LPAR > t=Exp() < RPAR >
    | < MINUS > t=Fact() { t = new ASTNeg(t); })
    { return t; }
 }
