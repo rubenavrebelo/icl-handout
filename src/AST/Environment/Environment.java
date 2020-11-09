@@ -22,11 +22,23 @@ public class Environment<V> {
 	}
 	
 	public V find(String id) {
-		return map.get(id);
+		V val = map.get(id);
+		if (val == null ) {
+			if (this.parent == null) {
+				System.out.println("This is a parent.");
+			}
+			
+			// find value in parent in case it's not null
+			val = this.parent.find(id);
+		}
+		return val;
 	}
 	
 	public void assoc (String id, V value) {
 		map.put(id, value);
 	}
 
+	public int depth() {
+		return map.size();
+	}
 }
