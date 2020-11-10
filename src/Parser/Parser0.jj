@@ -1,5 +1,6 @@
 PARSER_BEGIN(Parser)
-
+package Parser;
+import AST.Environment.Environment;
 
 /** ID lister. */
 public class Parser {
@@ -12,6 +13,7 @@ public class Parser {
     while (true) {
     try {
     exp = parser.Start();
+    Environment baseEnv = new Environment(null);
     System.out.println( exp.eval() );
     } catch (Exception e) {
       System.out.println ("Syntax Error!");
