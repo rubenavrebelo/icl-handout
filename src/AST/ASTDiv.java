@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Environment.Environment;
+import compiler.CodeBlock;
 
 public class ASTDiv implements ASTNode {
 	
@@ -16,6 +17,12 @@ public class ASTDiv implements ASTNode {
     	int v1 = lhs.eval(env);
 		int v2 = rhs.eval(env);
         return v1 / v2; 
+	}
+	
+	public void compile(CodeBlock c, Environment e) {
+		lhs.compile(c, e);
+		rhs.compile(c, e);
+		c.emit("iadd");
 	}
 
 }

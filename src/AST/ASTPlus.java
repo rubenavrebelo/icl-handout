@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Environment.Environment;
+import compiler.CodeBlock;
 
 public class ASTPlus implements ASTNode {
 
@@ -17,5 +18,11 @@ public class ASTPlus implements ASTNode {
     {
 		lhs = l; rhs = r;
     }
+    
+    public void compile(CodeBlock c, Environment e) {
+		lhs.compile(c, e);
+		rhs.compile(c, e);
+		c.emit("iadd");
+	}
 }
 

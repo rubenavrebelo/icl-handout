@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Environment.Environment;
+import compiler.CodeBlock;
 
 public class ASTNeg implements ASTNode {
 
@@ -13,6 +14,10 @@ public class ASTNeg implements ASTNode {
 	
 	public ASTNeg(int n) {
 		val = n;
+	}
+	
+	public void compile(CodeBlock c, Environment e) {
+
 	}
 
 }

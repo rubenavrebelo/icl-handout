@@ -1,27 +1,37 @@
 package AST;
 
+import java.util.Map;
+
 import AST.Environment.Environment;
+import compiler.CodeBlock;
 
 public class ASTDef implements ASTNode {
 
-	String id;
-	ASTNode init;
+	Map<String, ASTNode> ids;
 	ASTNode body;
 	
-	public ASTDef(String id, ASTNode init, ASTNode body) {
-		this.id = id;
-		this.init = init;
+	public ASTDef(Map<String, ASTNode> ids, ASTNode body) {
+		this.ids = ids;
 		this.body = body;
 	}
 
 	@Override
 	public int eval(Environment env) {
-		int val = init.eval(env);
+		
 		Environment env2 = env.beginScope();
-		env2.assoc(id, val);
-		val = body.eval(env2);
-		env2.endScope();
-		return val;
+		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
+			int val1 = id.getValue().eval(env2);
+			env2.assoc(id.getKey(), val1);
+		}
+		
+		int val2 = body.eval(env2);
+		env2 = env2.endScope();
+		return val2;
+	}
+	
+	public void compile(CodeBlock c, Environment e) {
+		Environment newEnv = e.beginScope();
+		c.emit("astore 3");
 	}
 	
 	

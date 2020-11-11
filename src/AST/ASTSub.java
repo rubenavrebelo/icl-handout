@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Environment.Environment;
+import compiler.CodeBlock;
 
 public class ASTSub implements ASTNode {
 
@@ -16,6 +17,12 @@ public class ASTSub implements ASTNode {
 	public ASTSub(ASTNode l, ASTNode r) {
 		lhs = l;
 		rhs = r;
+	}
+	
+	public void compile(CodeBlock c, Environment e) {
+		lhs.compile(c, e);
+		rhs.compile(c, e);
+		c.emit("iadd");
 	}
 
 }
