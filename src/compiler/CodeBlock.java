@@ -1,14 +1,13 @@
 package compiler;
 
 import java.io.PrintStream;
+import java.util.List;
 
 public class CodeBlock {
-	private String code[];
-	int pos;
+	private List<String> code;
 	
 	public void emit(String bytecode) {
-		code[pos] = bytecode;
-		pos++;
+		code.add(bytecode);
 	}
 	
 	public void dump(PrintStream f) {
