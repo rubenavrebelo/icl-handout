@@ -22,7 +22,7 @@ public class ASTSub implements ASTNode {
 	public void compile(CodeBlock c, Environment e) {
 		lhs.compile(c, e);
 		rhs.compile(c, e);
-		c.emit("iadd");
+		c.emit("isub");
 	}
 
 }
