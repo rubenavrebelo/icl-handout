@@ -5,19 +5,22 @@ import compiler.CodeBlock;
 
 public class ASTNeg implements ASTNode {
 
-	int val;
+	ASTNode exp;
 	
 	@Override
 	public int eval(Environment env) {
-		return -val;
+		int expVal = (int) exp.eval(env);
+		return -expVal;
 	}
 	
-	public ASTNeg(int n) {
-		val = n;
+	public ASTNeg(ASTNode exp) {
+		this.exp = exp;
 	}
 	
 	public void compile(CodeBlock c, Environment e) {
-
+		ASTNode zero = new ASTNum(0);
+		ASTNode neg = new ASTSub(zero, exp);
+		neg.compile(c, e);
 	}
 
 }
