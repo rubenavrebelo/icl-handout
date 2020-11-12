@@ -4,6 +4,9 @@ import AST.Environment.Environment;
 import AST.*;
 import java.util.Map;
 import java.util.HashMap;
+import compiler.CodeBlock;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
 
 /** ID lister. */
 public class Parser {
@@ -18,6 +21,10 @@ public class Parser {
     exp = parser.Start();
     Environment baseEnv = new Environment(null);
     System.out.println( exp.eval(baseEnv) );
+    CodeBlock cb = new CodeBlock();
+    exp.compile(cb, baseEnv);
+    PrintStream output = new PrintStream(new FileOutputStream("compiler.j"));
+    cb.dump(output);
     } catch (Exception e) {
       System.out.println ("Syntax Error!");
       parser.ReInit(System.in);
