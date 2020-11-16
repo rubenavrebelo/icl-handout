@@ -31,6 +31,12 @@ public class ASTDef implements ASTNode {
 	
 	public void compile(CodeBlock c, Environment e) {
 		Environment newEnv = e.beginScope();
+//		c.emit("new " + newEnv);
+//		c.emit("dup");
+//		c.emit("invokespecial " + newEnv + "/<init>()V");
+//		c.emit("dup");
+//		c.emit("aload 3");
+//		c.emit("putfield " + newEnv +"/3 " + "LAST/Environment/Environment");
 		c.emit("astore 3");
 	}
 	

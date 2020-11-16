@@ -21,6 +21,7 @@ public class ASTId implements ASTNode {
 	
 	public void compile(CodeBlock c, Environment e) {
 		c.emit("aload 3");
+//		c.emit("putfield " + e + "/" + id + " Ljava/lang/String");
 	}
 
 }
