@@ -21,7 +21,7 @@ public class CodeBlock {
 			+ "       ; place your bytecodes here\n"
 			+ "       ; START\n" 
 			+ "\n"
-			+ "aconst_null\nastore 4\n";
+			+ "       aconst_null\n       astore 4\n";
 	
 	public static final String COMP_END =  
 			"       ;END\n"
@@ -45,7 +45,7 @@ public class CodeBlock {
 		try {
 			f.println(COMP_START);
 			for (String codeBlock : code) {
-				f.println(codeBlock);
+				f.println("       " + codeBlock);
 			}
 			f.println(COMP_END);
 		} catch (Exception e) {
