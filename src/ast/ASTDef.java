@@ -53,18 +53,19 @@ public class ASTDef implements ASTNode {
 		c.setCurrentFrame(newFrame);
 		this.startFrame(c, frameName);
 		if (ancestorFrame != null)
-			c.emit("putfield " + frameName + "/sl L" + ancestorFrame.getFrameName() + ";\n");
+			c.emit("putfield " + frameName + "/sl L" + ancestorFrame.getFrameName() + ";");
 		else
-			c.emit("putfield " + frameName + "/sl Ljava/lang/Object;\n");
+			c.emit("putfield " + frameName + "/sl Ljava/lang/Object;");
 		
-		c.emit("astore 3\n");
+		c.emit("astore 3");
 		c.emit("\n");
 		
-		for (int i=0; i < ids.values().size(); i++) {
-			c.emit("aload 3\n");
-			ids.get(i).compile(c, newEnv);
+		int order = 0;
+		for (ASTNode value : ids.values()) {
+			c.emit("aload 3");
+			value.compile(c, newEnv);
 			
-			c.emit("putfield " + frameName + "/v" + i  + " I\n");
+			c.emit("putfield " + frameName + "/v" + order + " I");
 			c.emit("\n");
 		}
 		body.compile(c, newEnv);
@@ -73,16 +74,15 @@ public class ASTDef implements ASTNode {
 	
 	private void startFrame(CodeBlock c, String frame) {
 		c.emit("\n");
-		c.emit("new " + frame + "\n");
-		c.emit("dup\n");
-		c.emit("invokespecial " + frame + "/<init>()V\n");
-		c.emit("dup\n");
-		c.emit("aload 3\n");
-		c.emit("\n");
+		c.emit("new " + frame + "");
+		c.emit("dup");
+		c.emit("invokespecial " + frame + "/<init>()V");
+		c.emit("dup");
+		c.emit("aload 3");
 	}
 	
 	private void endFrame(CodeBlock c) {
-		c.emit("aload 3\n");
+		c.emit("aload 3");
 		
 		Frame currentFrame = c.getCurrentFrame();
 		Frame ancestorFrame = c.getAncestorFrame();
@@ -92,9 +92,9 @@ public class ASTDef implements ASTNode {
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl L" +
 		ancestorFrame.getFrameName() + ";\n");
 		else
-			c.emit("getfield " + currentFrame.getFrameName() + "/sl Ljava/lang/Object;\n");
+			c.emit("getfield " + currentFrame.getFrameName() + "/sl Ljava/lang/Object;");
 		
-		c.emit("astore 3\n");
+		c.emit("astore 3");
 	}
 	
 }

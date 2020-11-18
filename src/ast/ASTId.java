@@ -20,7 +20,7 @@ public class ASTId implements ASTNode {
 	}
 	
 	public void compile(CodeBlock c, Environment e) {
-		c.emit("aload 3\r\n");
+		c.emit("aload 3");
 		
 		Frame currentFrame = c.getCurrentFrame();
 		Frame ancestorFrame = null;
@@ -31,14 +31,14 @@ public class ASTId implements ASTNode {
 		//TODO
 		while (ancestorFrame != null) {
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl L" +
-		ancestorFrame.getFrameName() + ";\n");
+		ancestorFrame.getFrameName() + ";");
 			currentFrame = ancestorFrame;
 			ancestorFrame = currentFrame.getAncestor();
 		}
 		
 		if (currentFrame != null) {
 			for (int p: currentFrame.getParameters())
-				c.emit("getfield " + currentFrame.getFrameName() + "/v" + p + "I\n");
+				c.emit("getfield " + currentFrame.getFrameName() + "/v" + p + "I");
 		}
 		c.emit("\n");
 	}

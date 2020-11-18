@@ -22,7 +22,7 @@ public class ASTNeg implements ASTNode {
 //		ASTNode neg = new ASTSub(zero, exp);
 //		neg.compile(c, e);
 		exp.compile(c, e);
-		c.emit("ineg\r\n");
+		c.emit("ineg");
 	}
 
 }

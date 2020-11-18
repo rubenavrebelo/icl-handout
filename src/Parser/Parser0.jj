@@ -3,7 +3,7 @@ package Parser;
 import environment.Environment;
 import ast.*;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import compiler.CodeBlock;
 import java.io.PrintStream;
 import java.io.FileOutputStream;
@@ -21,11 +21,11 @@ public class Parser {
     exp = parser.Start();
     Environment baseEnv = new Environment(null);
     System.out.println( exp.eval(baseEnv) );
-    CodeBlock cb = new CodeBlock();
+    PrintStream output = new PrintStream(new FileOutputStream("compiler.j"));
+    CodeBlock cb = new CodeBlock(output);
     exp.compile(cb, baseEnv);
-//    PrintStream output = new PrintStream(new FileOutputStream("compiler.j"));
-//    cb.dump(output);
-	CodeBlock.compile(cb);
+   cb.dump();
+	//CodeBlock.compile(cb);
     } catch (Exception e) {
       System.out.println ("Syntax Error!");
       parser.ReInit(System.in);
@@ -116,7 +116,7 @@ ASTNode Term() :
 ASTNode Fact() :
 { Token n; 
   ASTNode t, t1;
-  Map<String, ASTNode> vars = new HashMap<String, ASTNode>();
+  Map<String, ASTNode> vars = new TreeMap<String, ASTNode>();
 }
 {
    ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); }
