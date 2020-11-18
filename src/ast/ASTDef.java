@@ -67,6 +67,7 @@ public class ASTDef implements ASTNode {
 			
 			c.emit("putfield " + frameName + "/v" + order + " I");
 			c.emit("\n");
+			order++;
 		}
 		body.compile(c, newEnv);
 		this.endFrame(c);

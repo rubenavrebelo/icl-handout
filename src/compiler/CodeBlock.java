@@ -9,15 +9,12 @@ public class CodeBlock {
 	private List<Frame> frames;
 	private Frame ancestorFrame;
 	private Frame currentFrame;
-	private PrintStream f;
 	
 	public CodeBlock(PrintStream f) {
 		this.code = new LinkedList<>();
 		this.frames = new LinkedList<>();
 		this.ancestorFrame = null;
 		this.currentFrame = null;
-		this.f = f;
-		f.println(COMP_START);
 	}
 	
 	public void emit(String bytecode) {
@@ -55,7 +52,7 @@ public class CodeBlock {
 	public Frame createFrame(List<Integer> parameters) {
 		Frame newFrame = new Frame(currentFrame, frames.size(), parameters);
 		frames.add(newFrame);
-		newFrame.writeFrame(f);
+		newFrame.writeFrame();
 		return newFrame;
 	}
 	
@@ -66,8 +63,9 @@ public class CodeBlock {
 			return Integer.parseInt(ancestorFrame.getFrameName().substring(6));
 	}
 	
-	public void dump() {
+	public void dump(PrintStream f) {
 		try {
+			f.println(COMP_START);
 			for (String codeBlock : code) {
 				f.println("       " + codeBlock);
 			}

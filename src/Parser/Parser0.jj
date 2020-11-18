@@ -24,7 +24,7 @@ public class Parser {
     PrintStream output = new PrintStream(new FileOutputStream("compiler.j"));
     CodeBlock cb = new CodeBlock(output);
     exp.compile(cb, baseEnv);
-   cb.dump();
+   	cb.dump(output);
 	//CodeBlock.compile(cb);
     } catch (Exception e) {
       System.out.println ("Syntax Error!");
