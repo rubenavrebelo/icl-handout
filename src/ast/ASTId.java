@@ -37,8 +37,12 @@ public class ASTId implements ASTNode {
 		}
 		
 		if (currentFrame != null) {
-			for (int p: currentFrame.getParameters())
-				c.emit("getfield " + currentFrame.getFrameName() + "/v" + p + " I");
+			int i = 0;
+			for (int p: currentFrame.getParameters()) {
+				
+				c.emit("getfield " + currentFrame.getFrameName() + "/v" + i + " I");
+				i++;
+			}
 		}
 		c.emit("\n");
 	}
