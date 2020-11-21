@@ -11,25 +11,27 @@ import environment.Environment;
 public class ASTDef implements ASTNode {
 
 	Map<String, ASTNode> ids;
+	Map<String, ASTNode> list;
 	ASTNode body;
 	
-	public ASTDef(Map<String, ASTNode> ids, ASTNode body) {
+	public ASTDef(Map<String, ASTNode> ids, ASTNode body, Map<String, ASTNode> list) {
 		this.ids = ids;
 		this.body = body;
+		this.list = list;
 	}
 
 	@Override
 	public int eval(Environment env) throws WrongValueException {
 		
-		env = env.beginScope();
+		Environment env2 = env.beginScope();
 		int val1;
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			val1 = id.getValue().eval(env);
-			env.assoc(id.getKey(), val1);
+			env2.assoc(id.getKey(), val1);
 		}
 		
-		int val2 = body.eval(env);
-		env = env.endScope();
+		int val2 = body.eval(env2);
+		env2.endScope();
 		return val2;
 	}
 	

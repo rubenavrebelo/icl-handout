@@ -23,16 +23,9 @@ public class Environment {
 	
 	//Throw undeclared identifier exception
 	public int find(String id) {
-		int val = map.get(id);
-		if ((Integer) val == null ) {
-			if (this.parent == null) {
-				System.out.println("This is a parent.");
-			}
-			
-			// find value in parent in case it's not null
-			val = this.parent.find(id);
-		}
-		return val;
+		if(map.containsKey(id))
+			return map.get(id);
+		return parent.find(id);
 	}
 	
 	//Throw Id declared twice exception
