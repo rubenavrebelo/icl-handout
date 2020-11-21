@@ -86,7 +86,7 @@ public class ASTDef implements ASTNode {
 		c.emit("aload 3");
 		
 		Frame currentFrame = c.getCurrentFrame();
-		Frame ancestorFrame = c.getAncestorFrame();
+		Frame ancestorFrame = currentFrame.getAncestor();
 		c.setCurrentFrame(currentFrame.getAncestor());
 		
 		if (ancestorFrame != null)
