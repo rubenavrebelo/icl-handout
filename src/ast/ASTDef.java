@@ -51,9 +51,14 @@ public class ASTDef implements ASTNode {
 		String frameName = newFrame.getFrameName();
 		Frame ancestorFrame = newFrame.getAncestor();
 		
-		//TODO
+		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
+			newEnv.assocFrame(id.getKey(), frameName);
+		}
+
 		c.setCurrentFrame(newFrame);
+		
 		this.startFrame(c, frameName);
+		
 		if (ancestorFrame != null)
 			c.emit("putfield " + frameName + "/sl L" + ancestorFrame.getFrameName() + ";");
 		else
@@ -77,7 +82,7 @@ public class ASTDef implements ASTNode {
 	
 	private void startFrame(CodeBlock c, String frame) {
 		c.emit("\n");
-		c.emit("new " + frame + "");
+		c.emit("new " + frame);
 		c.emit("dup");
 		c.emit("invokespecial " + frame + "/<init>()V");
 		c.emit("dup");
@@ -93,7 +98,7 @@ public class ASTDef implements ASTNode {
 		
 		if (ancestorFrame != null)
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl L" +
-		ancestorFrame.getFrameName() + ";\n");
+		ancestorFrame.getFrameName() + ";");
 		else
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl Ljava/lang/Object;");
 		

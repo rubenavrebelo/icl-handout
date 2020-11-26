@@ -28,8 +28,7 @@ public class ASTId implements ASTNode {
 		if (currentFrame != null)
 			ancestorFrame = currentFrame.getAncestor();
 		
-		//TODO
-		while (ancestorFrame != null) {
+		while (ancestorFrame != null && currentFrame.getFrameName() != e.getAssocFrame(id)) {
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl L" +
 		ancestorFrame.getFrameName() + ";");
 			currentFrame = ancestorFrame;

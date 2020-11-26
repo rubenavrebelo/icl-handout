@@ -40,9 +40,11 @@ public class Frame {
 			else
 				f.println(".field public sl Ljava/lang/Object;");
 
-			//TODO: .field public vX, com X = inteiro
-			for (int p: parameters)
-				f.println(".field public v" + "0" + " I");
+			int i = 0;
+			for (int p: parameters) {
+				f.println(".field public v" + i + " I");
+				i++;
+			}
 
 			f.println("\n");
 			f.println(".method public <init>()V");

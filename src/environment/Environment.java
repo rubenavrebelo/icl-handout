@@ -6,10 +6,12 @@ import java.util.Map;
 public class Environment {
 	Environment parent;
 	Map <String, Integer> map;
+	Map <String, String> varToFrame;
 	
 	public Environment(Environment p) {
 		this.parent = p;
 		map = new HashMap<String, Integer>();
+		varToFrame = new HashMap<String, String>();
 	}
 	
 	public Environment beginScope() {
@@ -35,5 +37,13 @@ public class Environment {
 
 	public int depth() {
 		return map.size();
+	}
+	
+	public void assocFrame (String id, String frame) {
+		this.varToFrame.put(id, frame);
+	}
+	
+	public String getAssocFrame (String id) {
+		return this.varToFrame.get(id);
 	}
 }
