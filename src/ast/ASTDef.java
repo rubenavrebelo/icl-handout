@@ -23,7 +23,8 @@ public class ASTDef implements ASTNode {
 	@Override
 	public int eval(Environment env) throws WrongValueException {
 		
-		Environment env2 = env.beginScope();
+		Environment env2 = env;
+		env2.beginScope();
 		int val1;
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			val1 = id.getValue().eval(env);
@@ -32,6 +33,7 @@ public class ASTDef implements ASTNode {
 		
 		int val2 = body.eval(env2);
 		env2.endScope();
+		env = env2;
 		return val2;
 	}
 	

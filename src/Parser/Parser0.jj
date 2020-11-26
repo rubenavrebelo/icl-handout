@@ -25,7 +25,6 @@ public class Parser {
     CodeBlock cb = new CodeBlock(output);
     exp.compile(cb, baseEnv);
    	cb.dump(output);
-	//CodeBlock.compile(cb);
     } catch (Exception e) {
       System.out.println ("Syntax Error!");
       parser.ReInit(System.in);
