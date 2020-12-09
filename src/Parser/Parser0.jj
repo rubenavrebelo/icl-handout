@@ -51,9 +51,29 @@ TOKEN :
   | 
   < END: "end">
   |
+  < PRINTLN: "println" >
+  |
+  < PRINT: "print" >
+  |
+  < NEW: "new" >
+  |
+  < IF: "if" >
+  |
+  < THEN: "then" >
+  |
+  < ELSE: "else" >
+  |
+  < WHILE: "while" >
+  |
+  < DO: "do" >
+  |
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   |
   < Num: (["0"-"9"]) + >
+  |
+  < EQTHEN: "==" >
+  |
+  < ASSIGN: ":=" >
   |
   < DIV : "/" >
   |
