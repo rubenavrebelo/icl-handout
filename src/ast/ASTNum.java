@@ -2,6 +2,9 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import ivalues.IValue;
+import ivalues.VInt;
+
 
 public class ASTNum implements ASTNode {
 
@@ -11,8 +14,8 @@ public class ASTNum implements ASTNode {
 		val = n;
 	}
 
-    public int eval(Environment env) {
-    	return val;
+    public IValue eval(Environment env) {
+    	return new VInt(val);
     }
 
     public void compile(CodeBlock c, Environment env) {

@@ -3,14 +3,16 @@ package environment;
 import java.util.HashMap;
 import java.util.Map;
 
+import ivalues.IValue;
+
 public class Environment {
 	Environment parent;
-	Map <String, Integer> map;
+	Map <String, IValue> map;
 	Map <String, String> varToFrame;
 	
 	public Environment(Environment p) {
 		this.parent = p;
-		map = new HashMap<String, Integer>();
+		map = new HashMap<String, IValue>();
 		varToFrame = new HashMap<String, String>();
 	}
 	
@@ -24,14 +26,14 @@ public class Environment {
 	}
 	
 	//Throw undeclared identifier exception
-	public int find(String id) {
+	public IValue find(String id) {
 		if(map.containsKey(id))
 			return map.get(id);
 		return parent.find(id);
 	}
 	
 	//Throw Id declared twice exception
-	public void assoc (String id, int value) {
+	public void assoc (String id, IValue value) {
 		map.put(id, value);			
 	}
 

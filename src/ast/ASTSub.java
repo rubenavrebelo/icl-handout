@@ -2,6 +2,9 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import ivalues.IValue;
+import ivalues.TypeErrorException;
+import ivalues.VInt;
 
 public class ASTSub implements ASTNode {
 
@@ -13,11 +16,16 @@ public class ASTSub implements ASTNode {
 	}
 	
 	@Override
-	public int eval(Environment env) throws WrongValueException {
-		int v1 = lhs.eval(env);
-		int v2 = rhs.eval(env);
+	public IValue eval(Environment env) throws TypeErrorException {
+		IValue v1 = lhs.eval(env);
+		if(v1 instanceof VInt) {
+			IValue v2 = rhs.eval(env);
+			if(v2 instanceof VInt) {
+				return ((VInt)v1).sub((VInt)v2);
+			}
+		}
 		
-		return v1 - v2;
+		throw new TypeErrorException("-:argument is	not	an integer");
 	}
 	
 	public void compile(CodeBlock c, Environment e) {
