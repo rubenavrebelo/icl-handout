@@ -10,4 +10,12 @@ public class VBool implements IValue {
 	public boolean getVal() {
 		return v;
 	}
+	
+	public VBool and(VBool v2) {
+		return new VBool(v && v2.getVal());
+	}
+	
+	public VBool or(VBool v2) {
+		return new VBool(v || v2.getVal());
+	}
 }

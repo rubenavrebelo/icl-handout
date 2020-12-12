@@ -2,13 +2,30 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import ivalues.IValue;
+import ivalues.TypeErrorException;
+import ivalues.VBool;
 
 public class ASTOr implements ASTNode {
 
+	ASTNode lhs, rhs;
+	
+	public ASTOr(ASTNode l, ASTNode r)
+    {
+			lhs = l; rhs = r;
+    }
+	
 	@Override
-	public int eval(Environment env) throws WrongValueException {
-		// TODO Auto-generated method stub
-		return 0;
+	public IValue eval(Environment env) throws TypeErrorException {
+		IValue v1 = lhs.eval(env);
+		if(v1 instanceof VBool) {
+			IValue v2 = rhs.eval(env);
+			if(v2 instanceof VBool) {
+				return ((VBool)v1).and((VBool) v2);
+			}
+		}
+		
+		throw new TypeErrorException("&: argument is not a boolean");
 	}
 
 	@Override

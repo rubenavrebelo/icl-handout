@@ -6,26 +6,23 @@ import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VBool;
 
-public class ASTAnd implements ASTNode {
+public class ASTNot implements ASTNode {
 
-	ASTNode lhs, rhs;
+	ASTNode exp;
 	
-	public ASTAnd(ASTNode l, ASTNode r)
+	public ASTNot(ASTNode exp)
     {
-			lhs = l; rhs = r;
+			this.exp = exp;
     }
 	
 	@Override
 	public IValue eval(Environment env) throws TypeErrorException {
-		IValue v1 = lhs.eval(env);
-		if(v1 instanceof VBool) {
-			IValue v2 = rhs.eval(env);
-			if(v2 instanceof VBool) {
-				return ((VBool)v1).and((VBool) v2);
-			}
-		}
+		IValue expVal = exp.eval(env);
 		
-		throw new TypeErrorException("&: argument is not a boolean");
+		if(expVal instanceof VBool) {
+			return new VBool(!((VBool)expVal).getVal());
+		}
+		throw new TypeErrorException("~: argument is not valid");
 	}
 
 	@Override
