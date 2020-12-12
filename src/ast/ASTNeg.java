@@ -2,6 +2,9 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import ivalues.IValue;
+import ivalues.TypeErrorException;
+import ivalues.VInt;
 
 public class ASTNeg implements ASTNode {
 
@@ -12,9 +15,13 @@ public class ASTNeg implements ASTNode {
 	}
 	
 	@Override
-	public int eval(Environment env) throws WrongValueException{
-		int expVal = (int)exp.eval(env);
-		return -expVal;
+	public IValue eval(Environment env) throws TypeErrorException{
+		IValue expVal = exp.eval(env);
+		if(expVal instanceof VInt) {
+			return new VInt(-((VInt)exp).getVal());
+		}
+		
+		throw new TypeErrorException("neg: argument is	not	an integer");
 	}
 	
 	public void compile(CodeBlock c, Environment e) {

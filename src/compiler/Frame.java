@@ -5,13 +5,15 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import ivalues.IValue;
+
 public class Frame {
 
 	private String frameId;
 	private Frame ancestorId;
-	private List<Integer> parameters;
+	private List<IValue> parameters;
 
-	public Frame(Frame ancestorFrame, int nFrame, List<Integer> parameters) {
+	public Frame(Frame ancestorFrame, int nFrame, List<IValue> parameters) {
 		this.frameId = "frame_"+ nFrame;
 		this.ancestorId = ancestorFrame;
 		this.parameters = parameters;
@@ -25,7 +27,7 @@ public class Frame {
 		return ancestorId;
 	}
 	
-	public List<Integer> getParameters() {
+	public List<IValue> getParameters() {
 		return parameters;
 	}
 
@@ -41,7 +43,7 @@ public class Frame {
 				f.println(".field public sl Ljava/lang/Object;");
 
 			int i = 0;
-			for (int p: parameters) {
+			for (IValue p: parameters) {
 				f.println(".field public v" + i + " I");
 				i++;
 			}

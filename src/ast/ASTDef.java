@@ -7,6 +7,8 @@ import java.util.Map;
 import compiler.CodeBlock;
 import compiler.Frame;
 import environment.Environment;
+import ivalues.IValue;
+import ivalues.TypeErrorException;
 
 public class ASTDef implements ASTNode {
 
@@ -21,17 +23,17 @@ public class ASTDef implements ASTNode {
 	}
 
 	@Override
-	public int eval(Environment env) throws WrongValueException {
+	public IValue eval(Environment env) throws TypeErrorException {
 		
 		Environment env2 = env;
 		env2.beginScope();
-		int val1;
+		IValue val1;
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			val1 = id.getValue().eval(env);
 			env2.assoc(id.getKey(), val1);
 		}
 		
-		int val2 = body.eval(env2);
+		IValue val2 = body.eval(env2);
 		env2.endScope();
 		env = env2;
 		return val2;
@@ -39,12 +41,12 @@ public class ASTDef implements ASTNode {
 	
 	public void compile(CodeBlock c, Environment e) {
 		Environment newEnv = e.beginScope();
-		List<Integer> parameters = new  LinkedList<>();
+		List<IValue> parameters = new LinkedList<>();
 		
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			try {
 				parameters.add(id.getValue().eval(newEnv));
-			} catch (WrongValueException e1) {
+			} catch (TypeErrorException e1) {
 				e1.printStackTrace();
 			}
 		}

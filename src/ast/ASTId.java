@@ -3,6 +3,7 @@ package ast;
 import compiler.CodeBlock;
 import compiler.Frame;
 import environment.Environment;
+import ivalues.IValue;
 
 public class ASTId implements ASTNode {
 	
@@ -14,7 +15,7 @@ public class ASTId implements ASTNode {
     }
 	
 	@Override
-	public int eval(Environment env)
+	public IValue eval(Environment env)
     {
 		return env.find(id);
 	}
@@ -37,7 +38,7 @@ public class ASTId implements ASTNode {
 		
 		if (currentFrame != null) {
 			int i = 0;
-			for (int p: currentFrame.getParameters()) {
+			for (IValue p: currentFrame.getParameters()) {
 				
 				c.emit("getfield " + currentFrame.getFrameName() + "/v" + i + " I");
 				i++;
