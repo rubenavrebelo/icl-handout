@@ -27,6 +27,11 @@ public class VInt implements IValue {
 		return new VInt(v / v2.getVal());
 	}
 	
+	public VBool eq(VInt v2) {
+		return new VBool(v == v2.getVal());
+	}
+	
+	
 	public String toString() {
 		return String.valueOf(v);
 	}
