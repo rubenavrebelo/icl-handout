@@ -98,6 +98,8 @@ TOKEN :
   < EL: "\n" >
   |
   < EQ: "="	>
+  |
+  < REF: "!" > 
 }
 
 ASTNode Start():
@@ -151,7 +153,10 @@ ASTNode Fact() :
    | <LPAR> t=Exp() <RPAR>
    | n = <Id> { t = new ASTId(n.image);}
    | < DEF > (n=< Id > < EQ > t1=Exp() {vars.put(n.image, t1); list.put(n.image, t1);})+ < IN > t2=Exp() < END > { t = new ASTDef(vars, t2, list); }
-   | < MINUS > t=Fact() { t = new ASTNeg(t); })
+   | < MINUS > t=Fact() { t = new ASTNeg(t); }
+   | < NEW > t=Fact() { t = new ASTNew(t); }
+   | < REF > t=Fact() { }
+   | < PRINT > t=Exp() { })
    { return t; }
 }
 
