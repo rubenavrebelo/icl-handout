@@ -5,6 +5,7 @@ import environment.Environment;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VBool;
+import ivalues.VInt;
 
 public class ASTIf implements ASTNode {
 	
@@ -21,16 +22,19 @@ public class ASTIf implements ASTNode {
 		
 		if(vC instanceof VBool) {
 			IValue vT = t.eval(env);
-			if(vT instanceof VBool) {
-				IValue vF = f.eval(env);
-				if(vF instanceof VBool) {
-					if(((VBool) vC).getVal())
-						return vT;
-					return vF;
+			IValue vF = f.eval(env);
+			if(vT instanceof VBool && vF instanceof VBool) {
+				if(((VBool) vC).getVal())
+					return vT;
+				return vF;
 				}
+			if(vT instanceof VInt && vF instanceof VInt) {
+				if(((VBool) vC).getVal())
+					return vT;
+				return vF;
 			}
 		}
-		throw new TypeErrorException("if: argument is not boolean");
+		throw new TypeErrorException("if: arguments are not valid");
 	}
 
 	@Override
