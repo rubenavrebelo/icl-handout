@@ -77,11 +77,21 @@ TOKEN :
   |
   < NOT: "~" >
   |
-  < EQTHEN: "==" >
+  < EQTO: "==" >
+  |
+  < MTHAN: ">" >
+  |
+  < MEQTHAN: ">=" >
+  |
+  < LTHAN: "<" >
+  |
+  < LEQTHAN: "<=" >
   |
   < ASSIGN: ":=" >
   |
   < SEQ: ";" >
+  |
+  < MOD: "%" >
   |
   < DIV : "/" >
   |
@@ -129,16 +139,36 @@ ASTNode Term() :
 }
 {
      t1 = Fact() (
-    ( op=<TIMES> | op=<DIV> ) 
+    ( op=<TIMES> | op=<DIV> | op=<MOD >) 
     t2 = Term() 
  		 {
  		 if(op.kind == TIMES)
  		 	t1 = new ASTMult(t1, t2);
  		 else if(op.kind == DIV)
  		 	t1 = new ASTDiv(t1, t2);
-         } 
+	 	 else if(op.kind == MOD)
+         	t1 = new ASTMod(t1, t2);
+         }
 		)*
      { return t1; } 
+}
+
+ASTNode Ineq() :
+{
+   Token op;
+   ASTNode t1, t2;
+}
+{
+	t1 = Exp() (	( op = < MTHAN > | op = < MEQTHAN > | op = < LTHAN > | op = < LEQTHAN > )
+	t2 = Exp()
+	{
+	  t1 = new ASTIneq(t1, t2, op.image);
+	}
+    )*
+    {
+      return t1;
+    }
+	
 }
 
 
