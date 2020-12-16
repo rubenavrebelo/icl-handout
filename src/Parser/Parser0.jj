@@ -156,7 +156,7 @@ ASTNode Fact() :
    | < MINUS > t=Fact() { t = new ASTNeg(t); }
    | < NEW > t=Fact() { t = new ASTNew(t); }
    | < REF > t=Fact() { }
-   | < PRINT > t=Exp() { })
+   | < PRINT > t=Exp() { t = new ASTPrint(t); })
    { return t; }
 }
 

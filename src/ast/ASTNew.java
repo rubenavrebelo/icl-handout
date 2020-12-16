@@ -11,6 +11,10 @@ import ivalues.VMCell;
 public class ASTNew implements ASTNode {
 	
 	ASTNode rhs;
+	
+	public ASTNew(ASTNode r) {
+		rhs = r;
+	}
 
 	@Override
 	public IValue eval(Environment env) throws TypeErrorException {

@@ -13,7 +13,7 @@ public class ASTPrint implements ASTNode {
 	
 	public ASTPrint(ASTNode node)
     {
-		
+		print = node;
     }
 	
 	@Override
