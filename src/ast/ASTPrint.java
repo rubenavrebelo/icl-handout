@@ -10,10 +10,12 @@ import ivalues.VInt;
 public class ASTPrint implements ASTNode {
 	
 	ASTNode print;
+	boolean isLn;
 	
-	public ASTPrint(ASTNode node)
+	public ASTPrint(ASTNode node, boolean isLn)
     {
 		print = node;
+		this.isLn = isLn;
     }
 	
 	@Override
@@ -21,9 +23,15 @@ public class ASTPrint implements ASTNode {
     {
 		IValue ePrint = print.eval(env);
 		if(ePrint instanceof VInt) {
-			System.out.println(((VInt)ePrint).getVal());
+			if(isLn) {
+				System.out.println(((VInt)ePrint).getVal());
+			}
+				System.out.print(((VInt)ePrint).getVal());
 		} else if(ePrint instanceof VBool) {
-			System.out.println(((VBool)ePrint).getVal());
+			if(isLn) {
+				System.out.println(((VBool)ePrint).getVal());
+			}
+			System.out.print(((VBool)ePrint).getVal());
 		} 
 		return ePrint;
     }

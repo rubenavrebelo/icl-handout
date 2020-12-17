@@ -18,4 +18,8 @@ public class VBool implements IValue {
 	public VBool or(VBool v2) {
 		return new VBool(v || v2.getVal());
 	}
+	
+	public String toString() {
+		return String.valueOf(v);
+	}
 }

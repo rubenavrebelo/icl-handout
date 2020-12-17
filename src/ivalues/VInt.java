@@ -35,6 +35,22 @@ public class VInt implements IValue {
 		return new VBool(v == v2.getVal());
 	}
 	
+	public VBool lessThan(VInt v2) {
+		return new VBool(v < v2.getVal());
+	}
+	
+	public VBool lessEqThan(VInt v2) {
+		return new VBool(v <= v2.getVal());
+	}
+	
+	public VBool moreThan(VInt v2) {
+		return new VBool(v > v2.getVal());
+	}
+	
+	public VBool moreEqThan(VInt v2) {
+		return new VBool(v >= v2.getVal());
+	}
+	
 	public String toString() {
 		return String.valueOf(v);
 	}
