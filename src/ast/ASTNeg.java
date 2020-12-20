@@ -25,9 +25,6 @@ public class ASTNeg implements ASTNode {
 	}
 	
 	public void compile(CodeBlock c, Environment e) {
-//		ASTNode zero = new ASTNum(0);
-//		ASTNode neg = new ASTSub(zero, exp);
-//		neg.compile(c, e);
 		exp.compile(c, e);
 		c.emit("ineg");
 	}

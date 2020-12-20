@@ -27,7 +27,7 @@ public class ASTIf implements ASTNode {
 				if(((VBool) vC).getVal())
 					return vT;
 				return vF;
-				}
+			}
 			if(vT instanceof VInt && vF instanceof VInt) {
 				if(((VBool) vC).getVal())
 					return vT;

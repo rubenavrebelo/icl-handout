@@ -22,7 +22,7 @@ public class ASTNot implements ASTNode {
 		if(expVal instanceof VBool) {
 			return new VBool(!((VBool)expVal).getVal());
 		}
-		throw new TypeErrorException("~: argument is not valid");
+		throw new TypeErrorException("~: argument is not boolean");
 	}
 
 	@Override

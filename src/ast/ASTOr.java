@@ -21,7 +21,7 @@ public class ASTOr implements ASTNode {
 		if(v1 instanceof VBool) {
 			IValue v2 = rhs.eval(env);
 			if(v2 instanceof VBool) {
-				return ((VBool)v1).and((VBool) v2);
+				return ((VBool)v1).or((VBool) v2);//TODO:'or' instead of 'and'
 			}
 		}
 		

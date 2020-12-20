@@ -75,6 +75,8 @@ TOKEN :
   |
   < Num: (["0"-"9"]) + >
   |
+  < BOOL: "bool" >
+  |
   < AND: "&&" >
   |
   < OR: "||" >
@@ -142,18 +144,24 @@ ASTNode Term() :
   ASTNode t1, t2;
 }
 {
-     t1 = Fact() (
-    ( op=<TIMES> | op=<DIV> | op=<MOD >) 
-    t2 = Term() 
- 		 {
+     t1 = Fact() ( op = < ASSIGN > t2 = Comp()
+       {
+         t1 = new ASTAssign(t1, t2);
+       }
+     |
+     (       
+       ( op=<TIMES> | op=<DIV> | op=<MOD>)
+       t2 = Term()
+       {
  		 if(op.kind == TIMES)
  		 	t1 = new ASTMult(t1, t2);
  		 else if(op.kind == DIV)
  		 	t1 = new ASTDiv(t1, t2);
 	 	 else if(op.kind == MOD)
          	t1 = new ASTMod(t1, t2);
-         }
-		)*
+        }
+      )*
+    )
      { return t1; } 
 }
 
@@ -169,10 +177,22 @@ ASTNode Ineq() :
 	  t1 = new ASTIneq(t1, t2, op.image);
 	}
     )*
+    { return t1; }
+}
+
+ASTNode Eq():
+{
+  ASTNode t1, t2;
+}
+{
+  t1 = Exp() (
+    ( op = < EQ > )
+    t2 = Exp
     {
-      return t1;
+      t1 = new ASTEq(t1, t2, op.image);
     }
-	
+  )*
+  { return t1; }
 }
 
 
@@ -189,11 +209,15 @@ ASTNode Fact() :
    | < DEF > (n=< Id > < EQ > t1=Exp() {vars.put(n.image, t1); list.put(n.image, t1);})+ < IN > t2=Exp() < END > { t = new ASTDef(vars, t2, list); }
    | < MINUS > t=Fact() { t = new ASTNeg(t); }
    | < NEW > t=Fact() { t = new ASTNew(t); }
-   | < REF > t=Fact() { }
+   | < REF > t=Fact() { t = new ASTRef(t); }
    | < PRINT > t=Exp() { t = new ASTPrint(t, false); }
    | < PRINTLN > t= Exp() { t = new ASTPrint(t, true); }
    | < TRUE > { t = new ASTBool(true); }
-   | < FALSE > { t = new ASTBool(false); })
+   | < FALSE > { t = new ASTBool(false); }
+   | < NOT > { t = new ASTNot(t); }
+   | < IF > t = Exp() < THEN > t1 = Exp() < ELSE > t2 = Exp() < END > { t = new ASTIf(t, t1, t2); }
+   | < WHILE > t = Exp() < DO > t = Exp() < END > { t1 = new ASTWhile(t, t1); }
+   )
    { return t; }
 }
 

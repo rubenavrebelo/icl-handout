@@ -4,14 +4,24 @@ import compiler.CodeBlock;
 import environment.Environment;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
-import ivalues.VInt;
 
 public class ASTSeq implements ASTNode {
 
+	private ASTNode lhs;
+	private ASTNode rhs;
+	
+	public ASTSeq(ASTNode left, ASTNode right) {
+		this.lhs = left;
+		this.rhs = right;
+	}
+
 	@Override
 	public IValue eval(Environment env) throws TypeErrorException {
-		// TODO Auto-generated method stub
-		return new VInt(0);
+		@SuppressWarnings("unused")
+		IValue l_eval = lhs.eval(env);
+		IValue r_eval = rhs.eval(env);
+		
+		return r_eval;
 	}
 
 	@Override
