@@ -165,7 +165,7 @@ ASTNode Term() :
      { return t1; } 
 }
 
-ASTNode Ineq() :
+ASTNode Bool_exp() :
 {
    Token op;
    ASTNode t1, t2;
@@ -176,15 +176,8 @@ ASTNode Ineq() :
 	{
 	  t1 = new ASTIneq(t1, t2, op.image);
 	}
-    )*
-    { return t1; }
-}
-
-ASTNode Eq():
-{
-  ASTNode t1, t2;
-}
-{
+    )
+  |
   t1 = Exp() (
     ( op = < EQ > )
     t2 = Exp
@@ -192,7 +185,7 @@ ASTNode Eq():
       t1 = new ASTEq(t1, t2, op.image);
     }
   )*
-  { return t1; }
+    { return t1; }
 }
 
 
@@ -215,8 +208,8 @@ ASTNode Fact() :
    | < TRUE > { t = new ASTBool(true); }
    | < FALSE > { t = new ASTBool(false); }
    | < NOT > { t = new ASTNot(t); }
-   | < IF > t = Exp() < THEN > t1 = Exp() < ELSE > t2 = Exp() < END > { t = new ASTIf(t, t1, t2); }
-   | < WHILE > t = Exp() < DO > t = Exp() < END > { t1 = new ASTWhile(t, t1); }
+   | < IF > t = Bool_exp() < THEN > t1 = Exp() < ELSE > t2 = Exp() < END > { t = new ASTIf(t, t1, t2); }
+   | < WHILE > t = Bool_exp() > t = Exp() < END > { t1 = new ASTWhile(t, t1); }
    )
    { return t; }
 }
