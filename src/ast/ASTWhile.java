@@ -4,6 +4,7 @@ import compiler.CodeBlock;
 import environment.Environment;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
+import ivalues.VBool;
 import ivalues.VInt;
 
 public class ASTWhile implements ASTNode {
@@ -16,8 +17,19 @@ public class ASTWhile implements ASTNode {
 	
 	@Override
 	public IValue eval(Environment env) throws TypeErrorException {
-		// TODO Auto-generated method stub
-		return new VInt(0);
+		IValue vCond = c.eval(env);
+		IValue vExp = exp.eval(env);
+		
+		if(vCond instanceof VBool) {
+			while(((VBool)vCond).getVal()) {
+				vCond = c.eval(env);
+				vExp = exp.eval(env);
+				if(!(vCond instanceof VBool))
+					throw new TypeErrorException("");
+			}
+			return vCond;
+		}
+		throw new TypeErrorException("");
 	}
 
 	@Override

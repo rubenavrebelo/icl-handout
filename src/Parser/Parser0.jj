@@ -27,6 +27,7 @@ public class Parser {
     exp.compile(cb, baseEnv);
    	cb.dump(output);
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println ("Syntax Error!");
       parser.ReInit(System.in);
     }
