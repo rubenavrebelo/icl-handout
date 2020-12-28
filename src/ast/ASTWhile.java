@@ -7,7 +7,13 @@ import ivalues.TypeErrorException;
 import ivalues.VInt;
 
 public class ASTWhile implements ASTNode {
+	ASTNode c, exp;
 
+	public ASTWhile(ASTNode cond, ASTNode exp) {
+		c = cond;
+		this.exp = exp;
+	}
+	
 	@Override
 	public IValue eval(Environment env) throws TypeErrorException {
 		// TODO Auto-generated method stub

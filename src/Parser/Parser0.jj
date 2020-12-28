@@ -144,7 +144,7 @@ ASTNode Term() :
   ASTNode t1, t2;
 }
 {
-     t1 = Fact() ( op = < ASSIGN > t2 = Comp()
+     t1 = Fact() ( op = < ASSIGN > t2 = Bool_exp()
        {
          t1 = new ASTAssign(t1, t2);
        }
@@ -171,20 +171,15 @@ ASTNode Bool_exp() :
    ASTNode t1, t2;
 }
 {
-	t1 = Exp() (	( op = < MTHAN > | op = < MEQTHAN > | op = < LTHAN > | op = < LEQTHAN > )
+	t1 = Exp() (	( op = < MTHAN > | op = < MEQTHAN > | op = < LTHAN > | op = < LEQTHAN > | op = < EQTO >)
 	t2 = Exp()
 	{
-	  t1 = new ASTIneq(t1, t2, op.image);
+	  if(op.kind == EQTO)
+	  	t1 = new ASTEq(t1, t2);
+	  else
+	  	t1 = new ASTIneq(t1, t2, op.image);
 	}
-    )
-  |
-  t1 = Exp() (
-    ( op = < EQ > )
-    t2 = Exp
-    {
-      t1 = new ASTEq(t1, t2, op.image);
-    }
-  )*
+  	)*
     { return t1; }
 }
 
@@ -207,9 +202,9 @@ ASTNode Fact() :
    | < PRINTLN > t= Exp() { t = new ASTPrint(t, true); }
    | < TRUE > { t = new ASTBool(true); }
    | < FALSE > { t = new ASTBool(false); }
-   | < NOT > { t = new ASTNot(t); }
+   | < NOT > t = Bool_exp() { t = new ASTNot(t); }
    | < IF > t = Bool_exp() < THEN > t1 = Exp() < ELSE > t2 = Exp() < END > { t = new ASTIf(t, t1, t2); }
-   | < WHILE > t = Bool_exp() > t = Exp() < END > { t1 = new ASTWhile(t, t1); }
+   | < WHILE > t = Bool_exp() < DO > t1 = Exp() < END > { t = new ASTWhile(t, t1); }
    )
    { return t; }
 }
