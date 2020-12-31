@@ -31,7 +31,9 @@ public class ASTMod implements ASTNode {
 	}
 	
 	public void compile(CodeBlock c, Environment<IValue> e) {
-		//TODO
+		lhs.compile(c, e);
+		rhs.compile(c, e);
+		c.emit("imod");
 	}
 
 	@Override

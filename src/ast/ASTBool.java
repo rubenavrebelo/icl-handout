@@ -23,7 +23,10 @@ public class ASTBool implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
+		if(v)
+			code.emit("sipush 1");
+		else
+			code.emit("sipush 0");
 
 	}
 
