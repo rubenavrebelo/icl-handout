@@ -2,6 +2,9 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import itypes.IType;
+import itypes.TBool;
+import itypes.TInt;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VInt;
@@ -18,7 +21,7 @@ public class ASTIneq implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) throws TypeErrorException {
+	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		IValue v1 = lhs.eval(env);
 		IValue v2 = rhs.eval(env);
 		
@@ -41,9 +44,26 @@ public class ASTIneq implements ASTNode {
 	}
 
 	@Override
-	public void compile(CodeBlock code, Environment env) {
+	public void compile(CodeBlock code, Environment<IValue> env) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) throws TypeErrorException {
+		IType v1 = lhs.typecheck(env);
+		IType v2 = rhs.typecheck(env);
+		
+		switch (type) {
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+			if(v1 instanceof TInt && v2 instanceof TInt)
+				return new TBool();
+			break;
+		}	
+		throw new TypeErrorException(type + ": arguments are invalid");
 	}
 
 }

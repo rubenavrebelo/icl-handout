@@ -223,7 +223,7 @@ ASTNode Fact() :
    | < NEW > t=Fact() { t = new ASTNew(t); }
    | < REF > t=Fact() { t = new ASTRef(t); }
    | < PRINT > t=Exp() { t = new ASTPrint(t, false); }
-   | < PRINTLN > t= Exp() { t = new ASTPrint(t, true); }
+   | < PRINTLN > { t = new ASTPrint(true); }
    | < TRUE > { t = new ASTBool(true); }
    | < FALSE > { t = new ASTBool(false); }
    | < NOT > t = Bool_exp() { t = new ASTNot(t); }

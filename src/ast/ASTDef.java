@@ -7,6 +7,7 @@ import java.util.Map;
 import compiler.CodeBlock;
 import compiler.Frame;
 import environment.Environment;
+import itypes.IType;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 
@@ -23,9 +24,9 @@ public class ASTDef implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) throws TypeErrorException {
+	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		
-		Environment env2 = env;
+		Environment<IValue> env2 = env;
 		env2.beginScope();
 		IValue val1;
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
@@ -39,8 +40,8 @@ public class ASTDef implements ASTNode {
 		return val2;
 	}
 	
-	public void compile(CodeBlock c, Environment e) {
-		Environment newEnv = e.beginScope();
+	public void compile(CodeBlock c, Environment<IValue> e) {
+		Environment<IValue> newEnv = e.beginScope();
 		List<IValue> parameters = new LinkedList<>();
 		
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
@@ -107,6 +108,12 @@ public class ASTDef implements ASTNode {
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl Ljava/lang/Object;");
 		
 		c.emit("astore 3");
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) throws TypeErrorException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

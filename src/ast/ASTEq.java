@@ -2,6 +2,7 @@ package ast;
 
 import compiler.CodeBlock;
 import environment.Environment;
+import itypes.IType;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VInt;
@@ -16,7 +17,7 @@ public class ASTEq implements ASTNode {
     }
 	
 	@Override
-	public IValue eval(Environment env) throws TypeErrorException {
+	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		IValue v1 = lhs.eval(env);
 		if(v1 instanceof VInt) {
 			IValue v2 = rhs.eval(env);
@@ -28,9 +29,15 @@ public class ASTEq implements ASTNode {
 	}
 
 	@Override
-	public void compile(CodeBlock code, Environment env) {
+	public void compile(CodeBlock code, Environment<IValue> env) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) throws TypeErrorException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
