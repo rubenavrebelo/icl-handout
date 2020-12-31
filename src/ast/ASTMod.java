@@ -3,6 +3,7 @@ package ast;
 import compiler.CodeBlock;
 import environment.Environment;
 import itypes.IType;
+import itypes.TInt;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VInt;
@@ -35,8 +36,14 @@ public class ASTMod implements ASTNode {
 
 	@Override
 	public IType typecheck(Environment<IType> env) throws TypeErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		IType t1 = lhs.typecheck(env);	
+    	if	(t1	instanceof TInt) {
+    		IType v2 = rhs.typecheck(env);
+    		if (v2 instanceof TInt)
+    			return new TInt();	
+    		throw new TypeErrorException("+:argument is	not	an integer");
+    	}
+		throw new TypeErrorException("+:argument is	not	an integer");
 	}
 
 }
