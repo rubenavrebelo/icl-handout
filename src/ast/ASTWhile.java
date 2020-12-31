@@ -24,8 +24,10 @@ public class ASTWhile implements ASTNode {
 		
 		if(vCond instanceof VBool) {
 			while(((VBool)vCond).getVal()) {
-				vCond = c.eval(env);
-				vExp = exp.eval(env);
+				if(((VBool)vCond).getVal()) {
+					vExp = exp.eval(env);
+					vCond = c.eval(env);
+				}
 				if(!(vCond instanceof VBool))
 					throw new TypeErrorException("");
 			}

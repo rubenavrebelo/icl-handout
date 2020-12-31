@@ -14,7 +14,7 @@ public class ASTAnd implements ASTNode {
 	
 	public ASTAnd(ASTNode l, ASTNode r)
     {
-			lhs = l; rhs = r;
+		lhs = l; rhs = r;
     }
 	
 	@Override
@@ -32,8 +32,9 @@ public class ASTAnd implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		lhs.compile(code, env);
+		rhs.compile(code, env);
+		code.emit("iand");
 	}
 
 	@Override
