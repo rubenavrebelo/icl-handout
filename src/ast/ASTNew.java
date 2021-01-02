@@ -24,13 +24,28 @@ public class ASTNew implements ASTNode {
 		if(v instanceof VInt || v instanceof VBool)
 			return new VMCell(v);
 		
-		throw new TypeErrorException("new: assignment is neither int nor bool");
+		throw new TypeErrorException("new: assignment is neither an Integer nor a Boolean");
 	}
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		
+		//TODO: verificar se rhs eh do tipo int
+//		if (rhs.typecheck(env) instanceof TInt)
+		code.emit("new ref_int");
+		code.emit("dup");
+		code.emit("invokespecial ref_int/<init>()V");
+		code.emit("dup");
+		rhs.compile(code, env);
+		code.emit("putfield ref_int/v I");
+		
+		//TODO: verificar se o rhs eh do tipo MCell
+//		code.emit("new ref_class");
+//		code.emit("dup");
+//		code.emit("invokespecial ref_class/<init>()V");
+//		code.emit("dup");
+//		rhs.compile(code, env);
+//		code.emit("putfield ref_class/v Ljava/lang/Object");
 	}
 
 	@Override
@@ -40,7 +55,7 @@ public class ASTNew implements ASTNode {
 		if(v instanceof TInt || v instanceof TBool)
 			return new TRef(v);
 		
-		throw new TypeErrorException("new: assignment is neither int nor bool");
+		throw new TypeErrorException("new: assignment is neither an Integer nor a Boolean");
 	}
 
 }

@@ -43,9 +43,9 @@ public class ASTSub implements ASTNode {
     		IType v2 = rhs.typecheck(env);
     		if (v2 instanceof TInt)
     			return new TInt();	
-    		throw new TypeErrorException("+:argument is	not	an integer");
+    		throw new TypeErrorException("-:argument is	not	an integer");
     	}
-		throw new TypeErrorException("+:argument is	not	an integer");
+		throw new TypeErrorException("-:argument is	not	an integer");
 	}
 
 }

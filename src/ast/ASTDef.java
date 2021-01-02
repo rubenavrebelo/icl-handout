@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +113,17 @@ public class ASTDef implements ASTNode {
 
 	@Override
 	public IType typecheck(Environment<IType> env) throws TypeErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		Environment<IType> env2 = env;
+		env2.beginScope();
+		IType t1;
+		for (Map.Entry<String, ASTNode> value: list.entrySet()) {
+			t1 = value.getValue().typecheck(env);
+			env2.assoc(value.getKey(), t1);
+		}
+		IType t2 = body.typecheck(env2);
+		env2.endScope();
+		env = env2;
+		return t2;
 	}
 	
 }

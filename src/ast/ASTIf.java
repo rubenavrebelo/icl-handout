@@ -10,18 +10,18 @@ import ivalues.VBool;
 import ivalues.VInt;
 
 public class ASTIf implements ASTNode {
-	
+
 	ASTNode c, t, f;
-	
+
 	public ASTIf(ASTNode c, ASTNode t, ASTNode f)
-    {
-			this.c = c; this.t = t; this.f = f;
-    }
+	{
+		this.c = c; this.t = t; this.f = f;
+	}
 
 	@Override
 	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		IValue vC = c.eval(env);
-		
+
 		if(vC instanceof VBool) {
 			IValue vT = t.eval(env);
 			IValue vF = f.eval(env);
@@ -41,17 +41,22 @@ public class ASTIf implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		c.compile(code, env);
+		code.emit("ifeq L1");
+		t.compile(code, env);
+		code.emit("goto L2");
+		code.emit("L1:");
+		f.compile(code, env);
+		code.emit("L2:");
 	}
 
 	@Override
 	public IType typecheck(Environment<IType> env) throws TypeErrorException {
 		IType tC = c.typecheck(env);
-		
+
 		if(tC instanceof TBool) {
 			return new TBool();
 		}
 		throw new TypeErrorException("if: arguments are not valid");
-		}
+	}
 }

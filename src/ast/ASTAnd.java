@@ -42,12 +42,11 @@ public class ASTAnd implements ASTNode {
 		IType v1 = lhs.typecheck(env);
 		if(v1 instanceof VBool) {
 			IType v2 = rhs.typecheck(env);
-			if(v2 instanceof VBool) {
+			if(v2 instanceof VBool)
 				return new TBool();
-			}
+			throw new TypeErrorException("&&: argument is not a boolean");
 		}
-		
-		throw new TypeErrorException("&: argument is not a boolean");
+		throw new TypeErrorException("&&: argument is not a boolean");
 	}
 
 }

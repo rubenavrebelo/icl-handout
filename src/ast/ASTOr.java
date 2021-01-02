@@ -34,7 +34,7 @@ public class ASTOr implements ASTNode {
 	public void compile(CodeBlock code, Environment<IValue> env) {
 		lhs.compile(code, env);
 		rhs.compile(code, env);
-		code.emit("iand");
+		code.emit("ior");
 	}
 
 	@Override
@@ -42,12 +42,12 @@ public class ASTOr implements ASTNode {
 		IType v1 = lhs.typecheck(env);
 		if(v1 instanceof TBool) {
 			IType v2 = rhs.typecheck(env);
-			if(v2 instanceof TBool) {
+			if(v2 instanceof TBool)
 				return new TBool();
-			}
+			throw new TypeErrorException("||: argument is not a boolean");
 		}
 		
-		throw new TypeErrorException("&: argument is not a boolean");
+		throw new TypeErrorException("||: argument is not a boolean");
 	}
 
 }

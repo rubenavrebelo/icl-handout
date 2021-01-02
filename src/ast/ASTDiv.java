@@ -43,7 +43,7 @@ public class ASTDiv implements ASTNode {
     		IType v2 = rhs.typecheck(tenv);
     		if (v2 instanceof TInt)
     			return new TInt();	
-    		throw new TypeErrorException("+:argument is	not	an integer");
+    		throw new TypeErrorException("/:argument is	not	an integer");
     	}
 		throw new TypeErrorException("/:argument is	not	an integer");
 	}

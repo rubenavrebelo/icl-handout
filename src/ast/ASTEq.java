@@ -3,6 +3,8 @@ package ast;
 import compiler.CodeBlock;
 import environment.Environment;
 import itypes.IType;
+import itypes.TBool;
+import itypes.TInt;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VInt;
@@ -10,12 +12,12 @@ import ivalues.VInt;
 public class ASTEq implements ASTNode {
 
 	ASTNode lhs, rhs;
-	
+
 	public ASTEq(ASTNode l, ASTNode r)
-    {
-			lhs = l; rhs = r;
-    }
-	
+	{
+		lhs = l; rhs = r;
+	}
+
 	@Override
 	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		IValue v1 = lhs.eval(env);
@@ -23,9 +25,11 @@ public class ASTEq implements ASTNode {
 			IValue v2 = rhs.eval(env);
 			if(v2 instanceof VInt) {
 				return ((VInt)v1).eq((VInt)v2);
+
 			}
+			throw new TypeErrorException("==: arguments is not integer");
 		}
-		throw new TypeErrorException("==: argument is not integer");
+		throw new TypeErrorException("==: arguments is not integer");
 	}
 
 	@Override
@@ -36,8 +40,11 @@ public class ASTEq implements ASTNode {
 
 	@Override
 	public IType typecheck(Environment<IType> env) throws TypeErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		IType t1 = lhs.typecheck(env);
+		IType t2 = rhs.typecheck(env);
+		if (t1 instanceof TInt && t2 instanceof TInt)
+			return new TBool();
+		throw new TypeErrorException("==: argument is not an Integer");
 	}
 
 }
