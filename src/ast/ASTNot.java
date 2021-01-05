@@ -29,8 +29,15 @@ public class ASTNot implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		exp.compile(code, env);
+		// If it is a 0, go to L1 and turn it into a 1
+		// if it is not a 0, push into the stack a zero and end
+		code.emit("ifeq L1");
+		code.emit("sipush 0");
+		code.emit("goto L2");
+		code.emit("L1:");
+		code.emit("sipush 1");
+		code.emit("L2:");
 	}
 
 	@Override

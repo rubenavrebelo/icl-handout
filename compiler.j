@@ -25,24 +25,11 @@
        aconst_null
        astore 3
 
-       
-
-       new frame_0
-       dup
-       invokespecial frame_0/<init>()V
-       dup
-       aload 3
-       putfield frame_0/sl Ljava/lang/Object;
-       astore 3
-       
-
-       aload 3
-       putfield frame_0/v0 I
-       
-
-       aload 3
-       getfield frame_0/sl Ljava/lang/Object;
-       astore 3
+       sipush 10
+       convert to String;
+       invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+       call print
+       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
        ;END
 
 
