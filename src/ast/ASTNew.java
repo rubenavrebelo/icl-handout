@@ -10,9 +10,10 @@ import ivalues.VInt;
 import ivalues.VMCell;
 
 public class ASTNew implements ASTNode {
-	
+
 	ASTNode rhs;
-	
+	IType type;
+
 	public ASTNew(ASTNode r) {
 		rhs = r;
 	}
@@ -20,41 +21,43 @@ public class ASTNew implements ASTNode {
 	@Override
 	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		IValue v = rhs.eval(env);
-		
+
 		if(v instanceof VInt || v instanceof VBool)
 			return new VMCell(v);
-		
+
 		throw new TypeErrorException("new: assignment is neither an Integer nor a Boolean");
 	}
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		
-		//TODO: verificar se rhs eh do tipo int
-//		if (rhs.typecheck(env) instanceof TInt)
-		code.emit("new ref_int");
-		code.emit("dup");
-		code.emit("invokespecial ref_int/<init>()V");
-		code.emit("dup");
-		rhs.compile(code, env);
-		code.emit("putfield ref_int/v I");
-		
-		//TODO: verificar se o rhs eh do tipo MCell
-//		code.emit("new ref_class");
-//		code.emit("dup");
-//		code.emit("invokespecial ref_class/<init>()V");
-//		code.emit("dup");
-//		rhs.compile(code, env);
-//		code.emit("putfield ref_class/v Ljava/lang/Object");
+
+		if (type instanceof TInt) {
+			code.emit("new ref_int");
+			code.emit("dup");
+			code.emit("invokespecial ref_int/<init>()V");
+			code.emit("dup");
+			rhs.compile(code, env);
+			code.emit("putfield ref_int/v I");
+		}
+		else if (type instanceof TRef) {		
+			code.emit("new ref_class");
+			code.emit("dup");
+			code.emit("invokespecial ref_class/<init>()V");
+			code.emit("dup");
+			rhs.compile(code, env);
+			code.emit("putfield ref_class/v Ljava/lang/Object");
+		}
 	}
 
 	@Override
 	public IType typecheck(Environment<IType> env) throws TypeErrorException {
 		IType v = rhs.typecheck(env);
-		
-		if(v instanceof TInt || v instanceof TBool)
-			return new TRef(v);
-		
+
+		if(v instanceof TInt || v instanceof TBool) {
+			type = new TRef(v);
+			return type;
+		}
+
 		throw new TypeErrorException("new: assignment is neither an Integer nor a Boolean");
 	}
 

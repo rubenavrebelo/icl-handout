@@ -27,8 +27,9 @@ public class ASTSeq implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		lhs.compile(code, env);
+		code.emit("pop");
+		rhs.compile(code, env);
 	}
 
 	@Override

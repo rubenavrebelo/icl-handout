@@ -34,8 +34,15 @@ public class ASTEq implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		// TODO Auto-generated method stub
-
+		lhs.compile(code, env);
+		rhs.compile(code, env);
+		
+		code.emit("isub");
+		code.emit("ifeq L1");
+		code.emit("sipush 0");
+		code.emit("goto L2");
+		code.emit("L1: sipush 1");
+		code.emit("L2:");
 	}
 
 	@Override

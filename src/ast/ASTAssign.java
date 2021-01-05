@@ -3,6 +3,7 @@ package ast;
 import compiler.CodeBlock;
 import environment.Environment;
 import itypes.IType;
+import itypes.TInt;
 import itypes.TRef;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
@@ -13,6 +14,7 @@ import ivalues.VMCell;
 public class ASTAssign implements ASTNode {
 
 	ASTNode lhs, rhs;
+	IType type;
 
 	public ASTAssign(ASTNode l, ASTNode r)
 	{
@@ -32,17 +34,19 @@ public class ASTAssign implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		//TODO: verificar se o rhs eh do tipo int
-		lhs.compile(code, env);
-		code.emit("checkcast ref_int");
-		rhs.compile(code, env);
-		code.emit("putfield ref_int/v I");
-		
-		//TODO: verificar se o rhs eh do tipo MCell
-		lhs.compile(code, env);
-		code.emit("checkcast ref_class");
-		rhs.compile(code, env);
-		code.emit("putfield ref_class/v Ljava/lang/Object");
+
+		if (type instanceof TInt) {			
+			lhs.compile(code, env);
+			code.emit("checkcast ref_int");
+			rhs.compile(code, env);
+			code.emit("putfield ref_int/v I");
+		}
+		else if (type instanceof TRef) {
+			lhs.compile(code, env);
+			code.emit("checkcast ref_class");
+			rhs.compile(code, env);
+			code.emit("putfield ref_class/v Ljava/lang/Object");
+		}
 	}
 
 	@Override
@@ -50,8 +54,10 @@ public class ASTAssign implements ASTNode {
 		IType v1 = lhs.typecheck(env);
 		if (v1 instanceof VMCell) {
 			IType v2 = rhs.typecheck(env);
-			if (v2 instanceof VInt || v2 instanceof VBool)
+			if (v2 instanceof VInt || v2 instanceof VBool) {
+				type = v1;
 				return new TRef(v1);
+			}
 			throw new TypeErrorException("assignment: rhs argument is neither an Integer nor a Boolean");
 		}
 		throw new TypeErrorException("assignment: lhs argument is not a reference");

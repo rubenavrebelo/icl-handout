@@ -40,6 +40,37 @@
        putfield frame_0/v0 I
        
 
+       L1:
+       sipush 1
+       isub
+       ifgt L1
+       sipush 0
+       goto L2
+       L1: sipush 1
+       L2:
+       ifeq L2
+       convert to String;
+       invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+       call print
+       invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+       pop
+       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+       pop
+       sipush 2
+       imod
+       sipush 0
+       isub
+       ifeq L1
+       sipush 0
+       goto L2
+       L1: sipush 1
+       L2:
+       ifeq L1
+       goto L2
+       L1:
+       L2:
+       goto L1
+       L2:
        aload 3
        getfield frame_0/sl Ljava/lang/Object;
        astore 3
