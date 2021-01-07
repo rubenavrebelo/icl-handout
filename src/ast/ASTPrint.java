@@ -65,7 +65,6 @@ public class ASTPrint implements ASTNode {
 			c.emit("convert to String;");
 			c.emit("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
 			c.emit("call print");
-//			c.emit("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
 			c.emit("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V");
 		}
 	}
