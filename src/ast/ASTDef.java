@@ -47,16 +47,18 @@ public class ASTDef implements ASTNode {
 	public void compile(CodeBlock c, Environment<IValue> e) {
 		Environment<IValue> newEnv = e.beginScope();
 		List<IValue> parameters = new LinkedList<>();
+		List<IType> param_types = new LinkedList<>();
 		
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			try {
 				parameters.add(id.getValue().eval(newEnv));
+				param_types.add(types.get(id.getKey()));
 			} catch (TypeErrorException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
-		Frame newFrame = c.createFrame(parameters);
+		Frame newFrame = c.createFrame(parameters, param_types);
 		String frameName = newFrame.getFrameName();
 		Frame ancestorFrame = newFrame.getAncestor();
 		

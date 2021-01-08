@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import itypes.IType;
 import ivalues.IValue;
 
 public class CodeBlock {
@@ -51,8 +52,8 @@ public class CodeBlock {
 		this.currentFrame = ancestorFrame;
 	}
 	
-	public Frame createFrame(List<IValue> parameters) {
-		Frame newFrame = new Frame(currentFrame, frames.size(), parameters);
+	public Frame createFrame(List<IValue> parameters, List<IType> param_types) {
+		Frame newFrame = new Frame(currentFrame, frames.size(), parameters, param_types);
 		frames.add(newFrame);
 		newFrame.writeFrame();
 		return newFrame;
