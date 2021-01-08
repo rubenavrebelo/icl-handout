@@ -20,12 +20,14 @@ public class Parser {
     try {
     exp = parser.Start();
     Environment baseEnv = new Environment(null);
-    System.out.println( exp.eval(baseEnv) );
+    exp.eval(baseEnv);
+    //System.out.println( exp.eval(baseEnv) );
     PrintStream output = new PrintStream(new FileOutputStream("compiler.j"));
     CodeBlock cb = new CodeBlock(output);
     exp.compile(cb, baseEnv);
    	cb.dump(output);
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println ("Syntax Error!");
       parser.ReInit(System.in);
     }
@@ -51,9 +53,53 @@ TOKEN :
   | 
   < END: "end">
   |
+  < PRINTLN: "println" >
+  |
+  < PRINT: "print" >
+  |
+  < NEW: "new" >
+  |
+  < IF: "if" >
+  |
+  < THEN: "then" >
+  |
+  < ELSE: "else" >
+  |
+  < WHILE: "while" >
+  |
+  < DO: "do" >
+  |
+  < TRUE: "true" >
+  |
+  < FALSE: "false" >
+  |
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   |
   < Num: (["0"-"9"]) + >
+  |
+  < BOOL: "bool" >
+  |
+  < AND: "&&" >
+  |
+  < OR: "||" >
+  |
+  < NOT: "~" >
+  |
+  < EQTO: "==" >
+  |
+  < MTHAN: ">" >
+  |
+  < MEQTHAN: ">=" >
+  |
+  < LTHAN: "<" >
+  |
+  < LEQTHAN: "<=" >
+  |
+  < ASSIGN: ":=" >
+  |
+  < SEQ: ";" >
+  |
+  < MOD: "%" >
   |
   < DIV : "/" >
   |
@@ -70,12 +116,14 @@ TOKEN :
   < EL: "\n" >
   |
   < EQ: "="	>
+  |
+  < REF: "!" > 
 }
 
 ASTNode Start():
 { ASTNode t; }
 {
-   t = Exp() <EL>
+   t = Sequence() <EL>
    { return t; }
 }
 
@@ -98,19 +146,67 @@ ASTNode Term() :
   ASTNode t1, t2;
 }
 {
-     t1 = Fact() (
-    ( op=<TIMES> | op=<DIV> ) 
-    t2 = Term() 
- 		 {
+     t1 = Fact() ( op = < ASSIGN > t2 = Bool_exp()
+       {
+         t1 = new ASTAssign(t1, t2);
+       }
+     |
+     (       
+       ( op=<TIMES> | op=<DIV> | op=<MOD>)
+       t2 = Term()
+       {
  		 if(op.kind == TIMES)
  		 	t1 = new ASTMult(t1, t2);
  		 else if(op.kind == DIV)
  		 	t1 = new ASTDiv(t1, t2);
-         } 
-		)*
+	 	 else if(op.kind == MOD)
+         	t1 = new ASTMod(t1, t2);
+        }
+      )*
+    )
      { return t1; } 
 }
 
+ASTNode Bool_exp() :
+{
+   Token op;
+   ASTNode t1, t2;
+}
+{
+	t1 = Exp() (	( op = < MTHAN > | op = < MEQTHAN > | op = < LTHAN > | op = < LEQTHAN > | op = < EQTO >)
+	t2 = Exp()
+	{
+	  if(op.kind == EQTO)
+	  	t1 = new ASTEq(t1, t2);
+	  else
+	  	t1 = new ASTIneq(t1, t2, op.image);
+	}
+  	)?
+    { return t1; }
+}
+
+ASTNode Sequence() :
+{
+  Token op;
+  ASTNode t1, t2;
+}
+{
+  t1 = Bool_exp()(
+    ( op = < SEQ > | op = < OR > | op = < AND > )
+  t2 = Sequence()
+	  {
+	    if(op.kind == SEQ)
+	    	t1 = new ASTSeq(t1, t2);
+	    else if (op.kind == OR)
+	    	t1 = new ASTOr(t1, t2);
+	    else if (op.kind == AND)
+	    	t1 = new ASTAnd(t1, t2);
+	  }
+  )*
+  {
+    return t1;
+  }
+}
 
 ASTNode Fact() :
 { Token n; 
@@ -122,8 +218,18 @@ ASTNode Fact() :
    ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); }
    | <LPAR> t=Exp() <RPAR>
    | n = <Id> { t = new ASTId(n.image);}
-   | < DEF > (n=< Id > < EQ > t1=Exp() {vars.put(n.image, t1); list.put(n.image, t1);})+ < IN > t2=Exp() < END > { t = new ASTDef(vars, t2, list); }
-   | < MINUS > t=Fact() { t = new ASTNeg(t); })
+   | < DEF > (n=< Id > < EQ > t1=Sequence() {vars.put(n.image, t1); list.put(n.image, t1);})+ < IN > t2=Sequence() < END > { t = new ASTDef(vars, t2, list); }
+   | < MINUS > t=Fact() { t = new ASTNeg(t); }
+   | < NEW > t=Fact() { t = new ASTNew(t); }
+   | < REF > t=Fact() { t = new ASTRef(t); }
+   | < PRINT > t=Exp() { t = new ASTPrint(t, false); }
+   | < PRINTLN > { t = new ASTPrint(true); }
+   | < TRUE > { t = new ASTBool(true); }
+   | < FALSE > { t = new ASTBool(false); }
+   | < NOT > t = Bool_exp() { t = new ASTNot(t); }
+   | < IF > t = Bool_exp() < THEN > t1 = Sequence() < ELSE > t2 = Sequence() < END > { t = new ASTIf(t, t1, t2); }
+   | < WHILE > t = Bool_exp() < DO > t1 = Sequence() < END > { t = new ASTWhile(t, t1); }
+   )
    { return t; }
 }
 

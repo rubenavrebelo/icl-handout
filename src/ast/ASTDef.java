@@ -7,11 +7,18 @@ import java.util.Map;
 import compiler.CodeBlock;
 import compiler.Frame;
 import environment.Environment;
+import itypes.IType;
+import itypes.TBool;
+import itypes.TInt;
+import itypes.TRef;
+import ivalues.IValue;
+import ivalues.TypeErrorException;
 
 public class ASTDef implements ASTNode {
 
 	Map<String, ASTNode> ids;
 	Map<String, ASTNode> list;
+	Map<String, IType> types;
 	ASTNode body;
 	
 	public ASTDef(Map<String, ASTNode> ids, ASTNode body, Map<String, ASTNode> list) {
@@ -21,35 +28,37 @@ public class ASTDef implements ASTNode {
 	}
 
 	@Override
-	public int eval(Environment env) throws WrongValueException {
+	public IValue eval(Environment<IValue> env) throws TypeErrorException {
 		
-		Environment env2 = env;
+		Environment<IValue> env2 = env;
 		env2.beginScope();
-		int val1;
+		IValue val1;
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			val1 = id.getValue().eval(env);
 			env2.assoc(id.getKey(), val1);
 		}
 		
-		int val2 = body.eval(env2);
+		IValue val2 = body.eval(env2);
 		env2.endScope();
 		env = env2;
 		return val2;
 	}
 	
-	public void compile(CodeBlock c, Environment e) {
-		Environment newEnv = e.beginScope();
-		List<Integer> parameters = new  LinkedList<>();
+	public void compile(CodeBlock c, Environment<IValue> e) {
+		Environment<IValue> newEnv = e.beginScope();
+		List<IValue> parameters = new LinkedList<>();
+		List<IType> param_types = new LinkedList<>();
 		
 		for(Map.Entry<String, ASTNode> id: ids.entrySet()) {
 			try {
 				parameters.add(id.getValue().eval(newEnv));
-			} catch (WrongValueException e1) {
+				param_types.add(types.get(id.getKey()));
+			} catch (TypeErrorException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
-		Frame newFrame = c.createFrame(parameters);
+		Frame newFrame = c.createFrame(parameters, param_types);
 		String frameName = newFrame.getFrameName();
 		Frame ancestorFrame = newFrame.getAncestor();
 		
@@ -70,11 +79,13 @@ public class ASTDef implements ASTNode {
 		c.emit("\n");
 		
 		int order = 0;
-		for (ASTNode value : ids.values()) {
+		for (Map.Entry<String, ASTNode> entry : ids.entrySet()) {
 			c.emit("aload 3");
-			value.compile(c, newEnv);
+			entry.getValue().compile(c, newEnv);
+			IType type = types.get(entry.getKey());
 			
-			c.emit("putfield " + frameName + "/v" + order + " I");
+			if (type instanceof TInt || type instanceof TBool || type instanceof TRef)
+				c.emit("putfield " + frameName + "/v" + order + " I");
 			c.emit("\n");
 			order++;
 		}
@@ -105,6 +116,22 @@ public class ASTDef implements ASTNode {
 			c.emit("getfield " + currentFrame.getFrameName() + "/sl Ljava/lang/Object;");
 		
 		c.emit("astore 3");
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) throws TypeErrorException {
+		Environment<IType> env2 = env;
+		env2.beginScope();
+		IType t1;
+		for (Map.Entry<String, ASTNode> value: list.entrySet()) {
+			t1 = value.getValue().typecheck(env);
+			env2.assoc(value.getKey(), t1);
+			types.put(value.getKey(), t1);
+		}
+		IType t2 = body.typecheck(env2);
+		env2.endScope();
+		env = env2;
+		return t2;
 	}
 	
 }

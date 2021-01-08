@@ -4,17 +4,22 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import itypes.IType;
+import ivalues.IValue;
+
 public class CodeBlock {
 	private List<String> code;
 	private List<Frame> frames;
 	private Frame ancestorFrame;
 	private Frame currentFrame;
+	private int nLabel;
 	
 	public CodeBlock(PrintStream f) {
 		this.code = new LinkedList<>();
 		this.frames = new LinkedList<>();
 		this.ancestorFrame = null;
 		this.currentFrame = null;
+		this.nLabel = 0;
 	}
 	
 	public void emit(String bytecode) {
@@ -49,8 +54,12 @@ public class CodeBlock {
 		this.currentFrame = ancestorFrame;
 	}
 	
-	public Frame createFrame(List<Integer> parameters) {
-		Frame newFrame = new Frame(currentFrame, frames.size(), parameters);
+	public int getNewLabel() {
+		return ++nLabel;
+	}
+	
+	public Frame createFrame(List<IValue> parameters, List<IType> param_types) {
+		Frame newFrame = new Frame(currentFrame, frames.size(), parameters, param_types);
 		frames.add(newFrame);
 		newFrame.writeFrame();
 		return newFrame;
