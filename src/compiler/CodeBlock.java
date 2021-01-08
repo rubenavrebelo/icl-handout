@@ -12,12 +12,14 @@ public class CodeBlock {
 	private List<Frame> frames;
 	private Frame ancestorFrame;
 	private Frame currentFrame;
+	private int nLabel;
 	
 	public CodeBlock(PrintStream f) {
 		this.code = new LinkedList<>();
 		this.frames = new LinkedList<>();
 		this.ancestorFrame = null;
 		this.currentFrame = null;
+		this.nLabel = 0;
 	}
 	
 	public void emit(String bytecode) {
@@ -50,6 +52,10 @@ public class CodeBlock {
 	
 	public void backTrack() {
 		this.currentFrame = ancestorFrame;
+	}
+	
+	public int getNewLabel() {
+		return ++nLabel;
 	}
 	
 	public Frame createFrame(List<IValue> parameters, List<IType> param_types) {

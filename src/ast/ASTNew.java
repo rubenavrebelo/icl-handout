@@ -31,21 +31,13 @@ public class ASTNew implements ASTNode {
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
 
-		if (type instanceof TInt) {
+		if (type instanceof TInt || type instanceof TRef) {
 			code.emit("new ref_int");
 			code.emit("dup");
 			code.emit("invokespecial ref_int/<init>()V");
 			code.emit("dup");
 			rhs.compile(code, env);
 			code.emit("putfield ref_int/v I");
-		}
-		else if (type instanceof TRef) {		
-			code.emit("new ref_class");
-			code.emit("dup");
-			code.emit("invokespecial ref_class/<init>()V");
-			code.emit("dup");
-			rhs.compile(code, env);
-			code.emit("putfield ref_class/v Ljava/lang/Object");
 		}
 	}
 

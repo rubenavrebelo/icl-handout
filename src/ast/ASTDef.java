@@ -84,10 +84,8 @@ public class ASTDef implements ASTNode {
 			entry.getValue().compile(c, newEnv);
 			IType type = types.get(entry.getKey());
 			
-			if (type instanceof TInt || type instanceof TBool)
+			if (type instanceof TInt || type instanceof TBool || type instanceof TRef)
 				c.emit("putfield " + frameName + "/v" + order + " I");
-			else if (type instanceof TRef)
-				c.emit("putfield " + frameName + "/v" + order + " Ljava/lang/Object");
 			c.emit("\n");
 			order++;
 		}

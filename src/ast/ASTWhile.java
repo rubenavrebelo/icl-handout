@@ -6,7 +6,6 @@ import itypes.IType;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 import ivalues.VBool;
-import ivalues.VInt;
 
 public class ASTWhile implements ASTNode {
 	ASTNode cond, exp;
@@ -36,12 +35,15 @@ public class ASTWhile implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		code.emit("L1:");
+		int nextLabel1 = code.getNewLabel();
+		int nextLabel2 = code.getNewLabel();
+		
+		code.emit("L" + nextLabel1 + ":");
 		cond.compile(code, env);
-		code.emit("ifeq L2");
+		code.emit("ifeq L" + nextLabel2);
 		exp.compile(code, env);
-		code.emit("goto L1");
-		code.emit("L2:");
+		code.emit("goto L" + nextLabel1);
+		code.emit("L" + nextLabel2 + ":");
 	}
 
 	@Override

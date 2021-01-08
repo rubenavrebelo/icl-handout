@@ -30,15 +30,10 @@ public class ASTRef implements ASTNode {
 
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
-		if (type instanceof TInt) {
+		if (type instanceof TInt || type instanceof TRef) {
 			ref.compile(code, env);
 			code.emit("checkcast ref_int");
 			code.emit("getfield ref_int/v I");
-		}
-		else if (type instanceof TRef) {
-			ref.compile(code, env);
-			code.emit("checkcast ref_class");
-			code.emit("getfield ref_class/v Ljava/lang/Object");
 		}
 	}
 

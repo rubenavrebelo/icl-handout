@@ -35,17 +35,11 @@ public class ASTAssign implements ASTNode {
 	@Override
 	public void compile(CodeBlock code, Environment<IValue> env) {
 
-		if (type instanceof TInt) {			
+		if (type instanceof TInt || type instanceof TRef) {			
 			lhs.compile(code, env);
 			code.emit("checkcast ref_int");
 			rhs.compile(code, env);
 			code.emit("putfield ref_int/v I");
-		}
-		else if (type instanceof TRef) {
-			lhs.compile(code, env);
-			code.emit("checkcast ref_class");
-			rhs.compile(code, env);
-			code.emit("putfield ref_class/v Ljava/lang/Object");
 		}
 	}
 
