@@ -1,6 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +8,9 @@ import compiler.CodeBlock;
 import compiler.Frame;
 import environment.Environment;
 import itypes.IType;
+import itypes.TBool;
+import itypes.TInt;
+import itypes.TRef;
 import ivalues.IValue;
 import ivalues.TypeErrorException;
 
@@ -16,6 +18,7 @@ public class ASTDef implements ASTNode {
 
 	Map<String, ASTNode> ids;
 	Map<String, ASTNode> list;
+	Map<String, IType> types;
 	ASTNode body;
 	
 	public ASTDef(Map<String, ASTNode> ids, ASTNode body, Map<String, ASTNode> list) {
@@ -74,11 +77,15 @@ public class ASTDef implements ASTNode {
 		c.emit("\n");
 		
 		int order = 0;
-		for (ASTNode value : ids.values()) {
+		for (Map.Entry<String, ASTNode> entry : ids.entrySet()) {
 			c.emit("aload 3");
-			value.compile(c, newEnv);
+			entry.getValue().compile(c, newEnv);
+			IType type = types.get(entry.getKey());
 			
-			c.emit("putfield " + frameName + "/v" + order + " I");
+			if (type instanceof TInt || type instanceof TBool)
+				c.emit("putfield " + frameName + "/v" + order + " I");
+			else if (type instanceof TRef)
+				c.emit("putfield " + frameName + "/v" + order + " Ljava/lang/Object");
 			c.emit("\n");
 			order++;
 		}
@@ -119,6 +126,7 @@ public class ASTDef implements ASTNode {
 		for (Map.Entry<String, ASTNode> value: list.entrySet()) {
 			t1 = value.getValue().typecheck(env);
 			env2.assoc(value.getKey(), t1);
+			types.put(value.getKey(), t1);
 		}
 		IType t2 = body.typecheck(env2);
 		env2.endScope();

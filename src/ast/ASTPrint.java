@@ -40,20 +40,6 @@ public class ASTPrint implements ASTNode {
 				System.out.print(((VBool)ePrint).getVal());
 			return ePrint;
 		}
-		
-//		IValue ePrint = print.eval(env);
-//		if(ePrint instanceof VInt) {
-//			if(isLn) {
-//				System.out.print("\n");
-//			}
-//			System.out.print(((VInt)ePrint).getVal());
-//		} else if(ePrint instanceof VBool) {
-//			if(isLn) {
-//				System.out.print("\n");
-//			}
-//			System.out.print(((VBool)ePrint).getVal());
-//		}
-//		return ePrint;
 	}
 
 	public void compile(CodeBlock c, Environment<IValue> e) {
@@ -62,9 +48,9 @@ public class ASTPrint implements ASTNode {
 			c.emit("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
 		else {
 			print.compile(c, e);
-			c.emit("convert to String;");
+//			c.emit("convert to String;");
 			c.emit("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
-			c.emit("call print");
+//			c.emit("call print");
 			c.emit("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V");
 		}
 	}
